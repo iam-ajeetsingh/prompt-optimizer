@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/ajeet/Desktop/Claude_Code_WorkSpace//**)",
+      "Read(//c/Users/ajeet/Desktop/Claude_Code_WorkSpace/**)"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+langgraph>=0.2.0
+langchain-anthropic>=0.3.0   # for Anthropic models
+langchain-core>=0.3.0
+fastapi>=0.115.0
+uvicorn>=0.32.0
+pydantic>=2.9.0
+python-dotenv>=1.0.0
+pytest>=8.3.0
+httpx>=0.28.0
+langgraph-checkpoint-sqlite>=0.1.0 
+langchain-google-genai>=2.0.0     # Added for Google Gemini models
+langchain-openai>=0.2.0    # Added for OpenAI models 
+streamlit>=1.40.0
