@@ -90,7 +90,7 @@ def optimizer_node(state: PromptWorkspaceState) -> dict:
         f"Human reviewer notes:\n{human_feedback}"
     )
 
-    result: OptimizerOutput = _get_llm.invoke([
+    result: OptimizerOutput = _get_llm().invoke([
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": user_message},
     ])

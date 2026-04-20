@@ -60,7 +60,7 @@ def generator_node(state: PromptWorkspaceState) -> dict:
         f"constraints:\n{constraints_block}\n"
         f"human_feedback: {human_feedback}"
     )
-    result: GeneratorOutput = _get_llm.invoke([
+    result: GeneratorOutput = _get_llm().invoke([
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": user_message},
     ])

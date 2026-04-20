@@ -83,7 +83,7 @@ def evaluator_node(state: PromptWorkspaceState) -> dict:
 
     user_message = "\n\n---\n\n".join(sections)
 
-    result: EvaluatorOutput = _get_llm.invoke([
+    result: EvaluatorOutput = _get_llm().invoke([
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": user_message},
     ])

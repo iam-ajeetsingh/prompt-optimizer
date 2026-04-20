@@ -62,7 +62,7 @@ def critic_node(state: PromptWorkspaceState) -> dict:
     )
     user_message = f"Here are the prompt variants to audit:\n\n{variants_block}"
 
-    result: CriticOutput = _get_llm.invoke([
+    result: CriticOutput = _get_llm().invoke([
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": user_message},
     ])
