@@ -20,19 +20,9 @@ If you choose **Retry**, the loop restarts with your notes fed back into the Gen
 
 ## Architecture
 
-```
-POST /run
-   └─► generator_node   →  critic_node  →  evaluator_node  →  [HITL pause]
-                                                                      │
-                                                               human reviews
-                                                                      │
-                                             ┌─── approve ────────────┘
-                                             │
-                                       optimizer_node  →  winning_prompt
-                                             │
-                                        POST /review
-                                        returns result
-```
+![Agent flow diagram](assets/architecture.png)
+
+> Generator creates 4 variants → Critic and Evaluator run in parallel → Human reviews and approves or retries → Optimizer synthesises the winning prompt.
 
 **State machine** — built with [LangGraph](https://github.com/langchain-ai/langgraph) `StateGraph`. The full `PromptWorkspaceState` TypedDict lives in `graph/state.py` and is the single source of truth passed between every node.
 
