@@ -33,12 +33,23 @@ class EvaluatorOutput(BaseModel):
 #_LLM = ChatAnthropic(model="claude-sonnet-4-5").with_structured_output(EvaluatorOutput)
 #_LLM = ChatGoogleGenerativeAI(model="gemini-1.5-flash").with_structured_output(EvaluatorOutput)
 
-_LLM = ChatOpenAI(
-    model="google/gemini-2.5-flash-lite",
-    openai_api_key=os.environ["OPENROUTER_API_KEY"],
-    openai_api_base="https://openrouter.ai/api/v1",
-).with_structured_output(EvaluatorOutput)
+#_LLM = ChatOpenAI(
+#    model="google/gemini-2.5-flash-lite",
+#    openai_api_key=os.environ["OPENROUTER_API_KEY"],
+#    openai_api_base="https://openrouter.ai/api/v1",
+#).with_structured_output(EvaluatorOutput)
 
+_LLM = None
+
+def _get_llm():
+    global _LLM
+    if _LLM is None:
+        _LLM = ChatOpenAI(
+            model="google/gemini-2.5-flash-lite",
+            openai_api_key=os.environ["OPENROUTER_API_KEY"],
+            openai_api_base="https://openrouter.ai/api/v1",
+        ).with_structured_output(EvaluatorOutput)
+    return _LLM
 
 def _compute_composite(scores: dict[str, int]) -> float:
     """Compute weighted composite score from dimension scores and RUBRIC weights."""
@@ -72,7 +83,7 @@ def evaluator_node(state: PromptWorkspaceState) -> dict:
 
     user_message = "\n\n---\n\n".join(sections)
 
-    result: EvaluatorOutput = _LLM.invoke([
+    result: EvaluatorOutput = _get_llm.invoke([
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": user_message},
     ])

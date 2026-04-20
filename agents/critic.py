@@ -26,12 +26,23 @@ class CriticOutput(BaseModel):
 #_LLM = ChatAnthropic(model="claude-sonnet-4-5").with_structured_output(CriticOutput)
 #_LLM = ChatGoogleGenerativeAI(model="gemini-1.5-flash").with_structured_output(CriticOutput)
 
-_LLM = ChatOpenAI(
-    model="google/gemini-2.5-flash-lite",
-    openai_api_key=os.environ["OPENROUTER_API_KEY"],
-    openai_api_base="https://openrouter.ai/api/v1",
-).with_structured_output(CriticOutput)
+#_LLM = ChatOpenAI(
+#    model="google/gemini-2.5-flash-lite",
+#    openai_api_key=os.environ["OPENROUTER_API_KEY"],
+#    openai_api_base="https://openrouter.ai/api/v1",
+#).with_structured_output(CriticOutput)
 
+_LLM = None
+
+def _get_llm():
+    global _LLM
+    if _LLM is None:
+        _LLM = ChatOpenAI(
+            model="google/gemini-2.5-flash-lite",
+            openai_api_key=os.environ["OPENROUTER_API_KEY"],
+            openai_api_base="https://openrouter.ai/api/v1",
+        ).with_structured_output(CriticOutput)
+    return _LLM
 
 
 def critic_node(state: PromptWorkspaceState) -> dict:
@@ -51,7 +62,7 @@ def critic_node(state: PromptWorkspaceState) -> dict:
     )
     user_message = f"Here are the prompt variants to audit:\n\n{variants_block}"
 
-    result: CriticOutput = _LLM.invoke([
+    result: CriticOutput = _get_llm.invoke([
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": user_message},
     ])

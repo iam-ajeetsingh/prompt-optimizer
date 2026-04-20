@@ -20,11 +20,25 @@ class OptimizerOutput(BaseModel):
 #_LLM = ChatAnthropic(model="claude-sonnet-4-5").with_structured_output(OptimizerOutput)
 #_LLM = ChatGoogleGenerativeAI(model="gemini-1.5-flash").with_structured_output(OptimizerOutput)
 
-_LLM = ChatOpenAI(
-    model="google/gemini-2.5-flash-lite",
-    openai_api_key=os.environ["OPENROUTER_API_KEY"],
-    openai_api_base="https://openrouter.ai/api/v1",
-).with_structured_output(OptimizerOutput)
+#_LLM = ChatOpenAI(
+#    model="google/gemini-2.5-flash-lite",
+#    openai_api_key=os.environ["OPENROUTER_API_KEY"],
+#    openai_api_base="https://openrouter.ai/api/v1",
+#).with_structured_output(OptimizerOutput)
+
+
+_LLM = None
+
+def _get_llm():
+    global _LLM
+    if _LLM is None:
+        _LLM = ChatOpenAI(
+            model="google/gemini-2.5-flash-lite",
+            openai_api_key=os.environ["OPENROUTER_API_KEY"],
+            openai_api_base="https://openrouter.ai/api/v1",
+        ).with_structured_output(OptimizerOutput)
+    return _LLM
+
 
 
 def _find_best_variant(prompt_variants: List[str], eval_scores: List[dict]) -> str:
@@ -76,7 +90,7 @@ def optimizer_node(state: PromptWorkspaceState) -> dict:
         f"Human reviewer notes:\n{human_feedback}"
     )
 
-    result: OptimizerOutput = _LLM.invoke([
+    result: OptimizerOutput = _get_llm.invoke([
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": user_message},
     ])

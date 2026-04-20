@@ -1,5 +1,5 @@
 import sqlite3
-import config  # loads .env before any agent module is imported
+#import config  # loads .env before any agent module is imported
 
 from langgraph.graph import StateGraph, END
 from langgraph.checkpoint.sqlite import SqliteSaver

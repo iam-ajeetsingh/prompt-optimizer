@@ -18,11 +18,25 @@ class GeneratorOutput(BaseModel):
 #_LLM = ChatAnthropic(model="claude-sonnet-4-5").with_structured_output(GeneratorOutput)
 #_LLM = ChatGoogleGenerativeAI(model="gemini-1.5-flash").with_structured_output(GeneratorOutput)
 
-_LLM = ChatOpenAI(
-    model="google/gemini-2.5-flash-lite",
-    openai_api_key=os.environ["OPENROUTER_API_KEY"],
-    openai_api_base="https://openrouter.ai/api/v1",
-).with_structured_output(GeneratorOutput)
+
+#_LLM = ChatOpenAI(
+#    model="google/gemini-2.5-flash-lite",
+#    openai_api_key=os.environ["OPENROUTER_API_KEY"],
+#    openai_api_base="https://openrouter.ai/api/v1",
+#).with_structured_output(GeneratorOutput)
+
+
+_LLM = None
+
+def _get_llm():
+    global _LLM
+    if _LLM is None:
+        _LLM = ChatOpenAI(
+            model="google/gemini-2.5-flash-lite",
+            openai_api_key=os.environ["OPENROUTER_API_KEY"],
+            openai_api_base="https://openrouter.ai/api/v1",
+        ).with_structured_output(GeneratorOutput)
+    return _LLM
 
 
 def generator_node(state: PromptWorkspaceState) -> dict:
@@ -46,7 +60,7 @@ def generator_node(state: PromptWorkspaceState) -> dict:
         f"constraints:\n{constraints_block}\n"
         f"human_feedback: {human_feedback}"
     )
-    result: GeneratorOutput = _LLM.invoke([
+    result: GeneratorOutput = _get_llm.invoke([
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": user_message},
     ])
