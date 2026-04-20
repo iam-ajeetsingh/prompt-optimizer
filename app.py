@@ -1,7 +1,9 @@
 import requests
 import streamlit as st
+import os
 
-API_BASE = "http://localhost:8000"
+#API_BASE = "http://localhost:8000"
+API_BASE = os.getenv("API_BASE_URL", "http://localhost:8000")
 
 st.set_page_config(page_title="Prompt Engineering Workspace", layout="wide")
 
